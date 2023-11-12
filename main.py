@@ -10,6 +10,7 @@ pygame.display.set_caption("Ninja")
 
 WIDTH, HEIGHT = 1000, 800
 FPS = 60
+PLAYER_VEL = 5
 
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -46,7 +47,7 @@ class Player(pygame.sprite.Sprite):
             self.animation_count =0
 
     def move_right(self,vel):
-        self.y_vel = vel
+        self.x_vel = +vel
         if self.direction !="right":
             self.direction ="right"
             self.animation_count =0
@@ -58,15 +59,20 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(win,self.COLOR,self.rect)
 
 
-
-
-
-
 def draw(window, background, bg_image,player):
     for title in background:
         window.blit(bg_image, title)
     player.draw(window)
     pygame.display.update()
+def handle_move(player):
+    keys= pygame.key.get_pressed()
+    player.x_vel =0
+    if keys[pygame.K_LEFT]:
+        player.move_left(PLAYER_VEL)
+    if keys[pygame.K_RIGHT]:
+        player.move_right(PLAYER_VEL)
+
+
 
 
 def main(window):
@@ -83,6 +89,8 @@ def main(window):
             if event.type == pygame.QUIT:
                 run = False
                 break
+        player.loop(FPS)
+        handle_move(player)
 
         draw(window, background, bg_image,player)
     pygame.quit()
